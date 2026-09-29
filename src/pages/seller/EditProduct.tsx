@@ -181,7 +181,7 @@ const EditProductScreen = () => {
             if (!result.error) {
                 showError(result.error)
             }
-            showSuccess(result?.data?.message)
+            showSuccess(result?.data?.message || 'Product updated')
             router.back();
         } catch (err) {
             console.error('Failed processing product update execution context:', err);

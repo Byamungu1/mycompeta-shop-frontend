@@ -55,7 +55,12 @@ const ProductInformation = ({ showimg, img, name, price, quantity, variant }:
                 {variant?.color && (
                     <p className='text-xs font-jakarta text-sand-500' numberOfLines={2}>Color: {variant.color}</p>
                 )}
+                 {quantity && (
+                    <p className='text-xs font-jakarta text-sand-500' numberOfLines={2}>Quantity: {quantity}</p>
+                )}
+                
             </div>
+           
             <p className='text-sm font-jakarta-bold text-brand-700'>KES {price}</p>
         </div>
     )
@@ -173,6 +178,8 @@ const Payment = () => {
             loadStoredShipping();
             loadCheckoutItems(setItems);
 
+            console.log('payment items', items)
+
             // Hardware Back Button listener (Android)
             const onBackPress = () => {
                 clearDirectBuyStore();
@@ -233,7 +240,7 @@ const Payment = () => {
                             <ProductInformation
                                 key={idx}
                                 showimg={true}
-                                img={item.images?.[0]?.image}
+                                img={item.image_urls || item.images?.[0]?.image}
                                 name={item.name}
                                 quantity={item.quantity}
                                 price={item.price}

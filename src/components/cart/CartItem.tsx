@@ -10,6 +10,8 @@ interface CartItemProps {
 }
 
 const CartItem = ({item: cart, setCartItems}: CartItemProps) => {
+
+    console.log('the cart image', cart)
     
     const removeFromCart = async (productId: string | number) => {
         try {
@@ -108,7 +110,7 @@ console.log('the cart', cart)
         border-sand-200 rounded-lg px-3 bg-white py-3'>
             <div className="w-1/3 flex flex-row gap-2 items-start">
                 <img
-                    src={cart.images?.[0]?.image}
+                    src={cart.image_urls || cart.images?.[0]?.image}
                     resizeMode="contain"
                     className='w-full h-20'
                 />

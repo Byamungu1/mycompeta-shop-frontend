@@ -74,7 +74,7 @@ export const googleLogin = async () => {
    await WebBrowser.warmUpAsync();
 
    // 1. Force the custom scheme ('mycompeta://login-callback')
-   const redirectUri = Linking.createURL('login-callback', { scheme: 'mycompetashop' });
+   const redirectUri = `${import.meta.env.VITE_FRONTEND_URL}/login-callback`; // 'mycompeta://login-callback'
    console.log('📱 Expected Redirect URI for WebBrowser:', redirectUri);
 
    // 2. Append the redirectUri as a query parameter so Django knows where to deep link back

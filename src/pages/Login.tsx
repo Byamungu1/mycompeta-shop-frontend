@@ -67,7 +67,7 @@ export default function AuthScreen() {
     // TextInput on screen so we can explicitly scroll to whichever one is
     // focused (some fields sit lower than the keyboard-aware defaults handle
     // well on Android, e.g. the last field in a two-column row).
-    const scrolldivRef = useRef<KeyboardAwareScrolldiv>(null);
+    const scrolldivRef = useRef<typeof KeyboardAwareScrolldiv>(null);
     const inputRefs = useRef<{ [key: string]: any }>({});
 
     const registerInputRef = (key: string) => (ref: any) => {
@@ -184,6 +184,7 @@ export default function AuthScreen() {
         setGoogleLoginLoading(true)
 
         const result = await googleLogin();
+        console.log('🔑 Tokens received:', result);
         if (!result || !result.access) {
             showError('Google Login Failed. Try later');
             setGoogleLoginLoading(false)

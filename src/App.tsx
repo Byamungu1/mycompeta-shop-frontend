@@ -46,6 +46,7 @@ import SellerNotifications from '@/pages/seller/Notifications';
 import SellerProductDetail from '@/pages/seller/ProductDetail';
 import AddProduct from '@/pages/seller/AddProduct';
 import EditProduct from '@/pages/seller/EditProduct';
+import LoginCallback from './components/LoginCallback';
 
 const BuyerTabs = () => (
   <TabBaseProvider value="/buyer">
@@ -99,6 +100,8 @@ export default function App() {
           <Route path="sellerProduct/addProduct" element={<AddProduct />} />
           <Route path="sellerProduct/editProduct/:id" element={<EditProduct />} />
           <Route path="sellerProduct/:id" element={<SellerProductDetail />} />
+
+          <Route path="/login-callback" element={<LoginCallback />} />
 
           <Route path="*" element={<NotFound />} />
         </Route>

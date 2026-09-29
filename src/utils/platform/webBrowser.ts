@@ -1,10 +1,10 @@
-/** expo-web-browser → window.open */
+/** expo-web-browser → window.open (Pure Web Implementation) */
 
-export const maybeCompleteAuthSession = () => {};
+export const maybeCompleteAuthSession = () => { };
 
-export const warmUpAsync = async () => {};
+export const warmUpAsync = async () => { };
 
-export const coolDownAsync = async () => {};
+export const coolDownAsync = async () => { };
 
 export const openBrowserAsync = async (url: string) => {
   window.open(url, '_blank', 'noopener,noreferrer');
@@ -13,21 +13,53 @@ export const openBrowserAsync = async (url: string) => {
 
 /**
  * On the web the OAuth round-trip cannot deep-link back into a custom scheme,
- * so this opens the provider page in a popup and reports "dismissed". Google
- * sign-in therefore needs a web redirect URI configured on the backend.
+ * so this opens the provider page in a popup and uses a BroadcastChannel to return tokens.
  */
-export const openAuthSessionAsync = async (url: string, _redirectUrl?: string) => {
-  const resolved = url.startsWith('http') ? url : window.location.origin + url;
-  window.open(resolved, '_blank', 'noopener,noreferrer,width=520,height=640');
-  return { type: 'dismiss' as const, url: null };
-};
+export const openAuthSessionAsync = (url: string, _redirectUrl?: string) =>
+  new Promise<{ type: 'success' | 'dismiss' | 'cancel'; url: string | null }>((resolve) => {
+    const resolved = url.startsWith('http') ? url : window.location.origin + url;
+    const popup = window.open(resolved, 'google-login', 'width=520,height=640');
+    if (!popup) return resolve({ type: 'cancel', url: null });
 
-export const dismissBrowser = () => {};
+    const authChannel = new BroadcastChannel('google_oauth_channel');
+    let done = false;
+    let timeout: ReturnType<typeof setTimeout>;
 
-export const dismissAuthSession = () => {};
+    const finish = (result: { type: 'success' | 'dismiss'; url: string | null }) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timeout);
+      authChannel.close();
+      resolve(result);
+    };
 
-export const mayBeCompleteAuthSession = () => false;
+    authChannel.onmessage = (event) => {
+      if (event.data?.type === 'GOOGLE_AUTH_SUCCESS' && event.data.url) {
+        try { popup.close(); } catch {}
+        finish({ type: 'success', url: event.data.url });
+      } else if (event.data?.type === 'GOOGLE_AUTH_ERROR') {
+        try { popup.close(); } catch {}
+        finish({ type: 'dismiss', url: null });
+      }
+    };
+
+    // COOP makes popup.closed unreliable, so use a generous timeout instead
+    timeout = setTimeout(() => finish({ type: 'dismiss', url: null }), 5 * 60 * 1000);
+  });
+
+export const dismissBrowser = () => { };
+
+export const dismissAuthSession = () => { };
 
 export const WebBrowserAuthSessionResult = {};
 
-export default { maybeCompleteAuthSession, warmUpAsync, coolDownAsync, openBrowserAsync, openAuthSessionAsync };
+// FIXED: Aligned default export keys to match all accessible exports perfectly
+export default { 
+  maybeCompleteAuthSession, 
+  warmUpAsync, 
+  coolDownAsync, 
+  openBrowserAsync, 
+  openAuthSessionAsync,
+  dismissBrowser,
+  dismissAuthSession
+};

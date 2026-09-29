@@ -225,6 +225,7 @@ export const fetchSellerProductDetails = async (id: string | number) => {
   return await api.get(`products/${id}/?as=seller`);
 };
 
+
 export const updateSellerProduct = async (productId: string | number, form: AddProductType) => {
   console.log('the images to be updated', form.image);
   
