@@ -3,6 +3,7 @@ import { useToast } from '@/context/toastContext';
 import { usePost } from '@/hooks/useApi';
 import { useTimer } from '@/hooks/useTimer';
 import { FormData } from '@/interfaces/interface';
+import * as WebBrowser from '@/utils/platform/webBrowser'
 import {
     googleLogin,
     login,
@@ -193,6 +194,7 @@ export default function AuthScreen() {
 
         await saveLoginRole(role)
         await saveSession(result.access, result.refresh);
+        WebBrowser.dismissAuthSession();
         showSuccess('Loging in with Google')
         setGoogleLoginLoading(false)
         router.replace('./');

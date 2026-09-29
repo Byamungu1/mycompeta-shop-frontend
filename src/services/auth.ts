@@ -87,7 +87,7 @@ export const googleLogin = async () => {
 
       if (result.type === 'success' && result.url) {
          const credentials = await processTokenRedirect(result.url);
-         return credentials;
+         return credentials;    
       }
 
       return false;
