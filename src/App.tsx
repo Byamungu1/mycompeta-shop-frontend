@@ -40,7 +40,7 @@ import SellerHome from '@/pages/seller/Home';
 import SellerOrders from '@/pages/seller/Orders';
 import SellerProducts from '@/pages/seller/Products';
 import SellerCustomers from '@/pages/seller/Customers';
-import SellerStore from '@/pages/seller/Store';
+import StoreScreen from '@/pages/seller/Store';
 import SellerSearch from '@/pages/seller/Search';
 import SellerNotifications from '@/pages/seller/Notifications';
 import SellerProductDetail from '@/pages/seller/ProductDetail';
@@ -81,7 +81,7 @@ export default function App() {
             <Route path="orders" element={<SellerOrders />} />
             <Route path="products" element={<SellerProducts />} />
             <Route path="customers" element={<SellerCustomers />} />
-            <Route path="store" element={<SellerStore />} />
+            <Route path="store" element={<StoreScreen />} />
           </Route>
 
           <Route path="seller/notification" element={<SellerNotifications />} />

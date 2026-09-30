@@ -107,7 +107,7 @@ const StoreScreen = () => {
         = useUpdate<SellerProfile>(() => updateSellerProfile(form));
 
     const { dataInfo, setDataInfo, handleToggle } = useDataInfo(shippingInfo);
-    const scrollRef = useRef<Scrolldiv>(null);
+    const scrollRef = useRef<typeof Scrolldiv>(null);
     const { showError, showSuccess } = useToast();
     const { colorScheme, toggleColorScheme, setColorScheme } = useColorScheme();
 

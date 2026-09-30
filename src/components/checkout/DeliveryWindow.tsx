@@ -38,14 +38,14 @@ export const calculateDeliveryWindow = (
     distanceKm: number
 ): DeliveryInfo => {
     // 1. Standard tier lookup for distances <= 2km
-    if (distanceKm <= 2) {
+    /*if (distanceKm <= 2) {
         const tier = DELIVERY_TIERS.find((t) => distanceKm <= t.maxKm) || DELIVERY_TIERS[1];
         return {
             label: tier.label,
             textClass: tier.text,
             dotClass: tier.dot,
         };
-    }
+    }*/
 
     // 2. Batch window logic for distances > 2km
     const date = new Date(orderTime);
@@ -56,32 +56,32 @@ export const calculateDeliveryWindow = (
     const window2Start = 13 * 60 + 1;   // 01:01 PM
     const window2End = 16 * 60;         // 04:00 PM
 
-    // Window 1: 7:00 AM to 11:00 AM -> Delivery 11:30 AM - 1:00 PM
+    // Window 1: 7:00 AM to 11:00 AM -> Delivery 12:00 AM - 1:00 PM
     if (totalMinutes >= window1Start && totalMinutes <= window1End) {
-        const tier = DELIVERY_TIERS.find((t) => distanceKm > t.maxKm)!; // 1 hr tier styling
+        //const tier = DELIVERY_TIERS.find((t) => distanceKm > t.maxKm)!; // 1 hr tier styling
         return {
-            label: '11:30 AM - 1:00 PM',
-            textClass: tier.text,
-            dotClass: tier.dot,
+            label: 'Delivery Time | 12:00 AM - 1:00 PM',
+            textClass: 'text-delivery-600',
+            dotClass: 'bg-delivery-500',
         };
     }
 
-    // Window 2: 1:01 PM to 4:00 PM -> Delivery 4:00 PM - 5:00 PM
+    // Window 2: 11:01 PM to 3:00 PM -> Delivery 4:00 PM - 5:00 PM
     if (totalMinutes >= window2Start && totalMinutes <= window2End) {
-        const tier = DELIVERY_TIERS.find((t) => distanceKm > t.maxKm)!; // 1 hr tier styling
+        //const tier = DELIVERY_TIERS.find((t) => distanceKm > t.maxKm)!; // 1 hr tier styling
         return {
-            label: '4:00 PM - 5:00 PM',
-            textClass: tier.text,
-            dotClass: tier.dot,
+            label: 'Delivery Time | 4:00 PM - 5:00 PM',
+            textClass: 'text-delivery-600',
+            dotClass: 'bg-delivery-500',
         };
     }
 
     // Fallback for orders outside scheduled windows (> 2km)
-    const fallbackTier = DELIVERY_TIERS[1]; // Infinity / 3 hrs tier styling
+    //const fallbackTier = DELIVERY_TIERS[1]; // Infinity / 3 hrs tier styling
     return {
-        label: 'Next Available Batch',
-        textClass: fallbackTier.text,
-        dotClass: fallbackTier.dot,
+        label: 'Next Available Batch | Tomorrow 12:00 AM - 1:00 PM',
+        textClass: 'text-delivery-600',
+        dotClass: 'bg-delivery-500',
     };
 };
 
@@ -129,7 +129,7 @@ const DeliveryTime: React.FC<DeliveryTimeProps> = ({
             <p className={`text-sand-500 font-medium uppercase tracking-wider mb-1 ${isForNearbyProducts ? 'text-xs' : 'text-sm'}`}>
                 Estimated Delivery
             </p>
-            <p className={`font-black mb-1 ${textClass || 'text-sand-900'} ${isForNearbyProducts ? 'text-lg' : 'text-3xl'}`}>
+            <p className={`font-black mb-1 ${textClass || 'text-sand-900'} ${isForNearbyProducts ? 'text-lg' : 'text-sm'}`}>
                 {label || '-- mins'}
             </p>
             <p className={`text-sand-500 text-center ${isForNearbyProducts ? 'text-xs' : 'text-sm'}`}>

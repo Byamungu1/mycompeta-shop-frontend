@@ -259,7 +259,7 @@ const DashboardScreen = () => {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    onPress={() => router.push('/orders')}
+                                    onPress={() => router.push('seller/orders')}
                                     className="flex-1 bg-white p-3 sm:p-4 rounded-lg items-center border border-sand-200  active:bg-sand-100">
                                     <ClipboardList size={18} color='#475569' className="mb-1 sm:hidden" />
                                     <ClipboardList size={20} color='#475569' className="mb-1 hidden sm:block" />
@@ -267,7 +267,7 @@ const DashboardScreen = () => {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    onPress={() => router.push('/store')}
+                                    onPress={() => router.push('seller/store')}
                                     className="flex-1 bg-white p-3 sm:p-4 rounded-lg items-center border border-sand-200  active:bg-sand-100">
                                     <Settings size={18} color='#475569' className="mb-1 sm:hidden" />
                                     <Settings size={20} color='#475569' className="mb-1 hidden sm:block" />

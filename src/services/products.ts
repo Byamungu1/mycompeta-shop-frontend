@@ -243,7 +243,10 @@ export const updateSellerProduct = async (productId: string | number, form: AddP
   }
 
   const targetImages = Array.isArray(form.image) ? form.image : [form.image];
+  console.log('the target images to be updated', targetImages);
   await appendimgToFormData(data, targetImages, 'image');
+
+  console.log('the form data to be sent', Array.from(data.entries()));
 
   return await api.patch(`seller/products/${productId}/`, data, {
     headers: { 'Content-Type': 'multipart/form-data' },
