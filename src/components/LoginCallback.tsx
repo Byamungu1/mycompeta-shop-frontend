@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { TouchableOpacity } from './common/ui';
 
 export default function LoginCallback() {
    useEffect(() => {
@@ -9,11 +10,13 @@ export default function LoginCallback() {
 
       // Inside LoginCallback.tsx
       const authChannel = new BroadcastChannel('google_oauth_channel');
+
       authChannel.postMessage({ type: 'GOOGLE_AUTH_SUCCESS', url: window.location.href });
       authChannel.close();
 
       // 3. Close the channel reference in this window context
       authChannel.close();
+      window.close()
    }, []);
 
    return (
