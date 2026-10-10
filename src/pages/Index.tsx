@@ -13,7 +13,7 @@ export default function Index() {
 
   if (isLoading) return null; // or a splash/loading screen
 
-  if (!user) return <Redirect href="/login" />;
+  if (!user) return <Redirect href="/(root)/(buyerTabs)" />;
 
    console.log('the seller in index', sellerProfile)
    console.log('the login role', loginRole)
@@ -25,7 +25,7 @@ export default function Index() {
   } else if (user && sellerProfile && loginRole == 'seller') {
     return <Redirect href="/(root)/(sellerTabs)" />;
   }else{
-      return <Redirect href="/login" />
+      return <Redirect href="/(root)/(buyerTabs)" />
   }
 
 

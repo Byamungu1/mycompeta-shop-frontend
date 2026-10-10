@@ -112,7 +112,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         console.log('Refresh token expired or missing. Logging out.');
-        await logout();
+        //await logout();
 
         // Reject with refreshError for protected routes so app redirects
         return Promise.reject(refreshError);

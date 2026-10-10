@@ -71,7 +71,7 @@ const assetsPlugin = () => {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const apiUrl = env.VITE_API_URL || env.EXPO_PUBLIC_API_URL || '/api/';
-  const proxyTarget = env.VITE_API_PROXY_TARGET || 'http://localhost:8080';
+  const proxyTarget = env.VITE_API_PROXY_TARGET || 'http://localhost:8000';
 
   return {
     plugins: [react(), assetsPlugin()],
