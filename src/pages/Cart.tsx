@@ -5,8 +5,12 @@ import { findTotalCharge } from '@/utils/findTotalCharge'
 import { router, useFocusEffect, useRouter } from '@/router'
 import * as SecureStorage from '@/utils/storage'
 import { useCallback, useState } from 'react'
-import { FlatList, TouchableOpacity } from '@/components/common/ui'
+import { FlatList, Modal, Scrolldiv, TouchableOpacity } from '@/components/common/ui'
 import { SafeAreadiv } from '@/components/layout/SafeArea'
+import { useGlobalContext } from '@/context/globalContext'
+import { useToast } from '@/context/toastContext'
+import { googleLogin } from '@/services/auth'
+import { usePost } from '@/hooks/useApi'
 
 export const CART_STORAGE_KEY = (import.meta.env.VITE_CART_STORAGE_KEY as string) || 'user_shopping_cart'
 
@@ -37,6 +41,8 @@ function Cart() {
 
     // 1. Set up state for your cart items
     const [cartItems, setCartItems] = useState<CartItemType[]>([])
+    const [showLoginModal, setShowLoginModal] = useState(false)
+
 
     // 2. Fetch the cart contents safely via useEffect when the screen mounts
     useFocusEffect(
@@ -56,8 +62,20 @@ function Cart() {
         }, []))
 
     const { totalItems, finalTotal, subtotal, totalDiscount, deliveryFee } = findTotalCharge(cartItems)
+    const { user, loginRole, isAuthenticated } = useGlobalContext()
 
+    const { execute: loginWithGoogle } = usePost(googleLogin)
 
+    const shouldProceedToCheckout = (user && loginRole === 'buyer' && isAuthenticated)
+    const proceedToCheckout = () => {
+        setShowLoginModal(false)
+
+        if (shouldProceedToCheckout) {
+            router.push('/checkout')
+            return true
+        }
+        setShowLoginModal(true)
+    }
     return (
         <SafeAreadiv className='bg-sand-50 flex-1'>
             <div className="px-4 md:px-6 lg:px-8 flex-1 lg:grid lg:grid-cols-[minmax(0,1.5fr)_minmax(320px,0.7fr)] lg:gap-6">
@@ -117,7 +135,7 @@ function Cart() {
 
                     {/* Checkout Button */}
                     <TouchableOpacity
-                        onPress={() => router.push('/checkout')}
+                        onPress={() => proceedToCheckout()}
                         disabled={cartItems.length === 0}
                         className={`mt-3 rounded-md py-3.5 items-center ${cartItems.length === 0 ? 'bg-sand-200' : 'bg-brand-500 active:bg-brand-600'}`}
                     >
@@ -126,10 +144,65 @@ function Cart() {
                         </p>
                     </TouchableOpacity>
                 </div>
+                <Modal
+                    visible={showLoginModal}
+                    transparent={true}
+                    animationType="fade"
+                    onRequestClose={() => setShowLoginModal(false)}
+                >
+                    <div className="flex-1 bg-black/50 justify-center items-center px-4">
+                        <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-2xl">
+                            {/* Header */}
+                            <div className="flex-row justify-between items-center mb-3">
+                                <p className="text-lg font-jakarta-bold text-sand-900">Login to continue</p>
+                                <TouchableOpacity onPress={() => setShowLoginModal(false)}>
+                                    <p className="text-sand-500 text-xl">×</p>
+                                </TouchableOpacity>
+                            </div>
 
+                            {/* Why login */}
+                            <p className="text-sm font-jakarta-medium text-sand-600 leading-relaxed mb-5">
+                                Logging in lets us save your order, calculate accurate delivery to your location,
+                                and let you track your purchase from the shop to your door. It only takes a few seconds.
+                            </p>
+
+                            {/* Login button */}
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowLoginModal(false)
+                                    router.push('/login')
+                                }}
+                                className="bg-brand-500 active:bg-brand-600 py-3.5 rounded-md items-center"
+                            >
+                                <p className="text-sand-950 font-jakarta-bold text-base">Login</p>
+                            </TouchableOpacity>
+
+                            {/* Divider */}
+                            <div className="flex-row items-center my-4">
+                                <div className="flex-1 h-px bg-sand-200" />
+                                <p className="text-xs font-jakarta-medium text-sand-400 mx-3">OR</p>
+                                <div className="flex-1 h-px bg-sand-200" />
+                            </div>
+
+                            {/* Google login button */}
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowLoginModal(false)
+                                    loginWithGoogle()
+                                }}
+                                className="bg-white border border-sand-200 active:bg-sand-50 py-3.5 rounded-md flex-row items-center justify-center gap-2"
+                            >
+                                <p className="text-base font-jakarta-bold text-sand-900">G</p>
+                                <p className="text-sand-900 font-jakarta-bold text-base">Continue with Google</p>
+                            </TouchableOpacity>
+                        </div>
+                    </div>
+                </Modal>
             </div>
         </SafeAreadiv>
     )
 }
 
 export default Cart;
+
+

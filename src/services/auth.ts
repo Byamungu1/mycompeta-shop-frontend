@@ -13,6 +13,7 @@ export const login = async (formData: { email: string; password: string }) => {
    const response = await api.post('auth/login/', {
       email: formData.email,
       password: formData.password
+      
    })
    console.log('the login data', response.data)
    return response
