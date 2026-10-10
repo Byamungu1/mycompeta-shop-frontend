@@ -3,16 +3,20 @@ import { router, useFocusEffect } from "@/router";
 import { Bell, ShoppingCart } from "lucide-react";
 import { useCallback } from "react";
 import { TouchableOpacity } from "@/components/common/ui";
+import { useGlobalContext } from "@/context/globalContext";
 
 
 export const NotificationIcon = ({onPress}: {onPress: () => void}) => {
     const {counts, refetchNotifications} = useGlobalCounts()
+    const {user, isAuthenticated} = useGlobalContext()
 
     useFocusEffect(
         useCallback(async ()=>{
             await refetchNotifications('all')
         }, [])
     )
+
+    if (!user || isAuthenticated) return null
     return (
         <TouchableOpacity
             onPress={onPress}
