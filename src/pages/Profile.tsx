@@ -9,6 +9,8 @@ import { useCallback, useState } from 'react'
 import { TouchableOpacity } from '@/components/common/ui'
 import { SafeAreadiv } from '@/components/layout/SafeArea'
 import api from '@/utils/api'
+import { usePost } from '@/hooks/useApi'
+import { googleLogin } from '@/services/auth'
 
 interface ProfileItemProps {
     icon: any
@@ -49,6 +51,8 @@ const profile = () => {
         refreshUserProfile,
         logout
     } = useGlobalContext()
+
+    const { execute: loginWithGoogle } = usePost(googleLogin)
 
     const handleLogout = async () => {
         setShowLogoutModal(true);
@@ -118,18 +122,52 @@ const profile = () => {
                         <CartIcon />
                     </div>
                 </div>
-                <div className='items-center justify-center mt-8 bg-white border border-sand-200 rounded-lg py-8 shadow-sm'>
-                    <div className="w-24 h-24 rounded-full bg-brand-500 items-center justify-center">
-                        <p className="text-sand-950 text-4xl font-jakarta-bold">
-                            {getAvatarInitials(user?.first_name, user?.username)}
-                        </p>
+                {isAuthenticated ? (
+                    <div className='items-center justify-center mt-8 bg-white border border-sand-200 rounded-lg py-8 shadow-sm'>
+                        <div className="w-24 h-24 rounded-full bg-brand-500 items-center justify-center">
+                            <p className="text-sand-950 text-4xl font-jakarta-bold">
+                                {getAvatarInitials(user?.first_name, user?.username)}
+                            </p>
+                        </div>
+                        <p className="text-sm font-jakarta text-sand-900 mt-2">{user?.username}</p>
+                        {
+                            user?.phone_number &&
+                            <p className="text-sm font-jakarta text-sand-600 mt-1">0{user?.phone_number}</p>
+                        }
                     </div>
-                    <p className="text-sm font-jakarta text-sand-900 mt-2">{user?.username}</p>
-                    {
-                        user?.phone_number &&
-                        <p className="text-sm font-jakarta text-sand-600 mt-1">0{user?.phone_number}</p>
-                    }
-                </div>
+                ) : (
+                    <div className='mt-8 bg-white border border-sand-200 rounded-lg p-6 shadow-sm'>
+                        <p className='text-lg font-jakarta-bold text-sand-900 mb-2'>Login to continue</p>
+                        <p className='text-sm font-jakarta-medium text-sand-600 leading-relaxed mb-5'>
+                            Logging in lets us save your orders, calculate accurate delivery to your location,
+                            and let you track your purchases from the shop to your door.
+                        </p>
+
+                        {/* Login button */}
+                        <TouchableOpacity
+                            onPress={() => router.push('/login')}
+                            className='bg-brand-500 active:bg-brand-600 py-3.5 rounded-md items-center'
+                        >
+                            <p className='text-sand-950 font-jakarta-bold text-base'>Login</p>
+                        </TouchableOpacity>
+
+                        {/* Divider */}
+                        <div className='flex-row items-center my-4'>
+                            <div className='flex-1 h-px bg-sand-200' />
+                            <p className='text-xs font-jakarta-medium text-sand-400 mx-3'>OR</p>
+                            <div className='flex-1 h-px bg-sand-200' />
+                        </div>
+
+                        {/* Google login button */}
+                        <TouchableOpacity
+                            onPress={() => loginWithGoogle(null)}
+                            className='bg-white border border-sand-200 active:bg-sand-50 py-3.5 rounded-md flex-row items-center justify-center gap-2'
+                        >
+                            <p className='text-base font-jakarta-bold text-sand-900'>G</p>
+                            <p className='text-sand-900 font-jakarta-bold text-base'>Continue with Google</p>
+                        </TouchableOpacity>
+                    </div>
+                )}
 
                 {/* Download App Card */}
                 <div className='mt-6 bg-brand-500 border border-brand-300 rounded-lg p-4 shadow-md'>
@@ -151,36 +189,39 @@ const profile = () => {
                         </TouchableOpacity>
                     </div>
                 </div>
+                {isAuthenticated &&
+                    <div
+                        style={{ gap: 10 }}
+                        className='flex flex-col mt-8 bg-white border border-sand-200 rounded-lg p-2'>
 
-                <div
-                    style={{ gap: 10 }}
-                    className='flex flex-col mt-8 bg-white border border-sand-200 rounded-lg p-2'>
-
-                    <ProfileItem
-                        onPress={() => router.push('/settings')}
-                        icon={<Settings size={24} className='text-brand-600' />} title="Settings" showArrow={true} />
-                    <ProfileItem
-                        icon={<Package size={24} className='text-brand-600' />}
-                        title="Orders"
-                        showArrow={true}
-                        onPress={() => router.push('/order')}
-                    />
-                </div>
-                <div className="mt-8">
-                    <ProfileItem icon={<LogOut
-                        size={24} className='text-sand-50' />}
-                        customStyles='bg-market-600'
-                        title="Logout"
-                        showArrow={false}
-                        onPress={handleLogout}
-                    />
-                </div>
+                        <ProfileItem
+                            onPress={() => router.push('/settings')}
+                            icon={<Settings size={24} className='text-brand-600' />} title="Settings" showArrow={true} />
+                        <ProfileItem
+                            icon={<Package size={24} className='text-brand-600' />}
+                            title="Orders"
+                            showArrow={true}
+                            onPress={() => router.push('/order')}
+                        />
+                    </div>
+                }
+                {isAuthenticated && (
+                    <div className="mt-8">
+                        <ProfileItem icon={<LogOut
+                            size={24} className='text-sand-50' />}
+                            customStyles='bg-market-600'
+                            title="Logout"
+                            showArrow={false}
+                            onPress={handleLogout}
+                        />
+                    </div>
+                )}
 
                 {/* Logout Confirmation Modal */}
                 <LogoutDecisionModal
-                  showLogoutModal={showLogoutModal}
-                  cancelLogout={cancelLogout}
-                  confirmLogout={confirmLogout}
+                    showLogoutModal={showLogoutModal}
+                    cancelLogout={cancelLogout}
+                    confirmLogout={confirmLogout}
                 />
 
                 {/* App Installation Instructions Modal */}
