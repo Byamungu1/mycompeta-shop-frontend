@@ -363,7 +363,7 @@ const ProductDetails = () => {
                 description={`${product.description || product.name}. Buy ${product.name} at ${finalPrice} on myCompeta Shop. ${product.discount ? `Save ${percentOff}%!` : ''}`}
                 keywords={`${product.name}, ${product.category?.name || ''}, buy online, myCompeta shop, ${product.seller?.shop_name || 'local seller'}`}
                 ogImage={product.images?.[0]?.image || 'https://shop.mycompeta.online/images/logo.png'}
-                ogUrl={`https://shop.mycompeta.online/product/${product.id}`}
+                ogUrl={`https://shop.mycompeta.online/products/${product.id}`}
                 ogType="product"
                 ogImageAlt={`${product.name} product image`}
             />
