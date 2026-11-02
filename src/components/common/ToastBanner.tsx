@@ -74,27 +74,27 @@ export default function ToastBanner({ visible, message, type, onClose, duration 
   const Icon = isSuccess ? CheckCircle : XCircle;
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-[9999]">
+    <div className="fixed bottom-14 md:bottom-0 left-2 right-2 lg:left-auto lg:right-0 z-[9999]">
       <SafeAreadiv>
         <Animated.div
-          className={`mx-4 ${bgColor} rounded-lg shadow-2xl overflow-hidden`}
+          className={`mx-4 mb-4 lg:mx-4 lg:mb-4 ${bgColor} rounded-lg shadow-2xl overflow-hidden`}
           style={{
             transform: [{ translateY: slideAnim }],
             opacity: fadeAnim,
           }}
         >
-          <div className="flex-row items-center px-4 py-4">
+          <div className="flex-row items-center px-1 py-1">
             {/* Icon */}
-            <div className="mr-3">
-              <Icon size={24} color="white" />
+            <div className="mr-2">
+              <Icon size={20} color="white" />
             </div>
 
             {/* Message */}
-            <div className="flex-1 mr-3">
-              <p className="text-white text-base font-semibold leading-tight">
+            <div className="flex-1 mr-2">
+              <p className="text-white text-sm font-semibold leading-tight">
                 {isSuccess ? 'Success' : 'Error'}
               </p>
-              <p className="text-white/90 text-sm mt-1 leading-relaxed">
+              <p className="text-white/90 text-xs mt-0.5 leading-relaxed">
                 {message}
               </p>
             </div>
@@ -105,13 +105,13 @@ export default function ToastBanner({ visible, message, type, onClose, duration 
               className="p-1 active:opacity-70"
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <X size={20} color="white" />
+              <X size={16} color="white" />
             </TouchableOpacity>
           </div>
 
           {/* Progress Bar */}
           <Animated.div
-            className="h-1 bg-white/30"
+            className="h-0.5 bg-white/30"
             style={{
               width: progressAnim.interpolate({
                 inputRange: [0, 1],
